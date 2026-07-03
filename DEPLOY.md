@@ -83,3 +83,27 @@ vercel --prod
 - Anthropic: ~$0.002–0.006 per extract
 
 Keep `ANTHROPIC_API_KEY` server-side only — never in the frontend.
+
+## Guardrails (API cost protection)
+
+The backend ships with rate limits to protect your Anthropic key on the public demo:
+
+| Limit | Default | Applies to |
+|-------|---------|------------|
+| PDF size | 25 MB | all uploads |
+| PDF pages | 50 | all uploads |
+| PDF ops | 30/min per IP | info + render (no LLM cost) |
+| Extractions | 5/hour per IP | extract + CSV export |
+| Extractions | 15/day per IP | extract + CSV export |
+| Global extractions | 50/day (UTC) | all users combined |
+
+Tune via env vars in `backend/.env.example`. Check live usage: `GET /api/usage`.
+
+**Optional demo token** — blocks direct API calls (curl/scripts) that bypass your frontend:
+
+1. Generate a secret: `openssl rand -hex 16`
+2. Render → `DEMO_ACCESS_TOKEN` = that value
+3. Vercel → `NEXT_PUBLIC_DEMO_ACCESS_TOKEN` = same value
+4. Redeploy both
+
+Without the token, rate limits still apply. CORS blocks browser requests from random sites but not server-side bots — the limits above are the main defense.

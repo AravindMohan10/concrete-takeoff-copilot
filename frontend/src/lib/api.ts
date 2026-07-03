@@ -2,9 +2,17 @@ import type { FootingSchedule, PdfInfo, RenderedPage } from "./types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
+function apiHeaders(): HeadersInit {
+  const headers: Record<string, string> = {};
+  const token = process.env.NEXT_PUBLIC_DEMO_ACCESS_TOKEN;
+  if (token) headers["X-Demo-Token"] = token;
+  return headers;
+}
+
 async function postForm<T>(path: string, formData: FormData): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     method: "POST",
+    headers: apiHeaders(),
     body: formData,
   });
 
@@ -43,6 +51,7 @@ export async function downloadCsv(file: File, page: number): Promise<void> {
 
   const res = await fetch(`${API_BASE}/api/export/csv`, {
     method: "POST",
+    headers: apiHeaders(),
     body: form,
   });
 

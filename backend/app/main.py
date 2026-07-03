@@ -1,11 +1,20 @@
 import io
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
 from app.config import settings
 from app.extractor import extract_footing_schedule_from_pdf, schedule_to_csv
+from app.guardrails import (
+    check_extract_allowed,
+    check_pdf_op_allowed,
+    record_extract,
+    record_pdf_op,
+    usage_snapshot,
+    validate_page_count,
+    validate_pdf_bytes,
+)
 from app.models import FootingSchedule
 from app.pdf_utils import get_page_count, pdf_page_to_base64_png
 
@@ -30,6 +39,14 @@ app.add_middleware(
 )
 
 
+async def _read_and_validate_pdf(file: UploadFile) -> bytes:
+    if not file.filename or not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(400, "Please upload a PDF file")
+    pdf_bytes = await file.read()
+    validate_pdf_bytes(pdf_bytes)
+    return pdf_bytes
+
+
 @app.get("/")
 def root():
     return {"status": "ok", "app": "Concrete Takeoff Copilot", "version": "0.1.0"}
@@ -40,23 +57,35 @@ def health():
     return {"status": "ok"}
 
 
-@app.post("/api/pdf/info")
-async def pdf_info(file: UploadFile = File(...)):
-    """Return page count so the UI can show a page picker."""
-    if not file.filename or not file.filename.lower().endswith(".pdf"):
-        raise HTTPException(400, "Please upload a PDF file")
+@app.get("/api/usage")
+def usage():
+    """Public demo capacity snapshot (no secrets)."""
+    return usage_snapshot()
 
-    pdf_bytes = await file.read()
-    return {"filename": file.filename, "page_count": get_page_count(pdf_bytes)}
+
+@app.post("/api/pdf/info")
+async def pdf_info(request: Request, file: UploadFile = File(...)):
+    """Return page count so the UI can show a page picker."""
+    ip = check_pdf_op_allowed(request)
+    pdf_bytes = await _read_and_validate_pdf(file)
+    page_count = get_page_count(pdf_bytes)
+    validate_page_count(page_count)
+    record_pdf_op(ip)
+    return {"filename": file.filename, "page_count": page_count}
 
 
 @app.post("/api/pdf/render")
 async def render_page(
+    request: Request,
     file: UploadFile = File(...),
     page: int = Form(0),
 ):
     """Render one PDF page as PNG (base64) for the canvas viewer."""
-    pdf_bytes = await file.read()
+    ip = check_pdf_op_allowed(request)
+    pdf_bytes = await _read_and_validate_pdf(file)
+    page_count = get_page_count(pdf_bytes)
+    validate_page_count(page_count)
+    record_pdf_op(ip)
     try:
         image_b64 = pdf_page_to_base64_png(pdf_bytes, page_index=page)
     except ValueError as e:
@@ -67,6 +96,7 @@ async def render_page(
 
 @app.post("/api/extract/footing-schedule", response_model=FootingSchedule)
 async def extract_footings(
+    request: Request,
     file: UploadFile = File(...),
     page: int = Form(0),
 ):
@@ -74,7 +104,11 @@ async def extract_footings(
     Core takeoff pipeline:
     PDF page → PNG → Claude vision → structured footing schedule → CY volumes
     """
-    pdf_bytes = await file.read()
+    ip = check_extract_allowed(request)
+    pdf_bytes = await _read_and_validate_pdf(file)
+    page_count = get_page_count(pdf_bytes)
+    validate_page_count(page_count)
+
     try:
         schedule = extract_footing_schedule_from_pdf(pdf_bytes, page_index=page)
     except ValueError as e:
@@ -82,16 +116,22 @@ async def extract_footings(
     except Exception as e:
         raise HTTPException(502, f"Extraction failed: {e}") from e
 
+    record_extract(ip)
     return schedule
 
 
 @app.post("/api/export/csv")
 async def export_csv(
+    request: Request,
     file: UploadFile = File(...),
     page: int = Form(0),
 ):
     """Extract and return CSV in one shot (for download button)."""
-    pdf_bytes = await file.read()
+    ip = check_extract_allowed(request)
+    pdf_bytes = await _read_and_validate_pdf(file)
+    page_count = get_page_count(pdf_bytes)
+    validate_page_count(page_count)
+
     try:
         schedule = extract_footing_schedule_from_pdf(pdf_bytes, page_index=page)
     except ValueError as e:
@@ -99,6 +139,7 @@ async def export_csv(
     except Exception as e:
         raise HTTPException(502, f"Extraction failed: {e}") from e
 
+    record_extract(ip)
     csv_content = schedule_to_csv(schedule)
     return StreamingResponse(
         io.StringIO(csv_content),

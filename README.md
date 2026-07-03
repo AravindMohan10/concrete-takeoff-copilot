@@ -86,7 +86,17 @@ Both services are live. To redeploy or fork:
 - **Frontend** → Vercel, root directory `frontend`, env `NEXT_PUBLIC_API_URL`
 - **Backend** → Render, root directory `backend`, env `ANTHROPIC_API_KEY`
 
-Full steps: **[DEPLOY.md](DEPLOY.md)**
+Full steps: **[DEPLOY.md](DEPLOY.md)** (includes API guardrails and cost limits)
+
+## Guardrails
+
+Public demo protections on the API:
+
+- **Rate limits** — 5 extractions/hour and 15/day per IP; 50/day global cap
+- **Upload limits** — 25 MB max PDF, 50 pages max
+- **Optional demo token** — `DEMO_ACCESS_TOKEN` / `NEXT_PUBLIC_DEMO_ACCESS_TOKEN` blocks direct API scripts
+
+See `backend/.env.example` for all tunables. Usage snapshot: `GET /api/usage`.
 
 ## Project structure
 
