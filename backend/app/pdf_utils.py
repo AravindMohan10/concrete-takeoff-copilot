@@ -2,11 +2,6 @@ import base64
 
 import fitz  # PyMuPDF
 
-
-import base64
-
-import fitz  # PyMuPDF
-
 # Anthropic API rejects images if either dimension exceeds 8000px
 MAX_IMAGE_DIMENSION = 7900
 

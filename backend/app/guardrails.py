@@ -139,3 +139,12 @@ def usage_snapshot() -> dict:
             "extract_per_ip_hour": settings.extract_per_ip_hour,
             "extract_per_ip_day": settings.extract_per_ip_day,
         }
+
+
+def reset_guardrails_for_tests() -> None:
+    """Clear in-memory rate limit state (tests only)."""
+    with _lock:
+        _extract_hour.clear()
+        _extract_day.clear()
+        _global_extract_day.clear()
+        _pdf_ops_minute.clear()

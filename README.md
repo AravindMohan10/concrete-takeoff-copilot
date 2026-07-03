@@ -79,6 +79,16 @@ Open http://localhost:3002
 - **/** — Landing page (what it is, learnings, embedded try)
 - **/try** — Full-screen demo workspace
 
+## Tests
+
+```bash
+# Backend (pytest)
+cd backend && source .venv/bin/activate && pip install -r requirements.txt && pytest
+
+# Frontend (vitest + build)
+cd frontend && npm install && npm test && npm run build
+```
+
 ## Deploy
 
 Both services are live. To redeploy or fork:
