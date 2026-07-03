@@ -82,8 +82,11 @@ Open http://localhost:3002
 ## Tests
 
 ```bash
-# Backend (pytest)
+# Backend (pytest + offline evals)
 cd backend && source .venv/bin/activate && pip install -r requirements.txt && pytest
+
+# Extraction evals (offline = free, live = uses Anthropic API)
+cd backend && python -m eval.run_eval --offline
 
 # Frontend (vitest + build)
 cd frontend && npm install && npm test && npm run build
@@ -107,6 +110,15 @@ Public demo protections on the API:
 - **Optional demo token** — `DEMO_ACCESS_TOKEN` / `NEXT_PUBLIC_DEMO_ACCESS_TOKEN` blocks direct API scripts
 
 See `backend/.env.example` for all tunables. Usage snapshot: `GET /api/usage`.
+
+## Evals
+
+Extraction quality is measured against golden cases on real sample PDFs. See **[backend/eval/README.md](backend/eval/README.md)**.
+
+```bash
+cd backend && python -m eval.run_eval --offline   # free, CI-safe
+cd backend && python -m eval.run_eval --live     # calls Anthropic (~$0.01 for 3 cases)
+```
 
 ## Project structure
 

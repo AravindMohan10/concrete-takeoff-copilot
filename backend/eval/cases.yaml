@@ -1,0 +1,70 @@
+# Eval golden cases — expected extraction outputs for sample PDFs.
+# Dimensions are decimal feet. Tolerance defaults to 0.05 ft unless noted.
+
+cases:
+  - id: portland-s500-p0
+    pdf: samples/portland-foundation-s500.pdf
+    page: 0
+    description: Froelich S200 footing schedule (verified against drawing)
+    expect:
+      footing_count: 5
+      total_cy: 2.04
+      total_cy_tolerance: 0.05
+      rows:
+        - mark: "1"
+          length_ft: 2.833
+          width_ft: 1.583
+          depth_ft: 1.5
+          dim_tolerance: 0.02
+        - mark: "2"
+          length_ft: 2.833
+          width_ft: 1.583
+          depth_ft: 1.5
+          dim_tolerance: 0.02
+        - mark: "3"
+          length_ft: 2.833
+          width_ft: 1.583
+          depth_ft: 1.5
+          dim_tolerance: 0.02
+        - mark: "4"
+          length_ft: 4.667
+          width_ft: 1.75
+          depth_ft: 1.75
+          dim_tolerance: 0.02
+        - mark: "5"
+          length_ft: 6.667
+          width_ft: 1.75
+          depth_ft: 1.75
+          dim_tolerance: 0.02
+
+  - id: huntsville-s400-p0
+    pdf: samples/huntsville-sam-houston-s400.pdf
+    page: 0
+    description: Classic F1/F2/F3 spread footing schedule
+    expect:
+      footing_count: 3
+      required_marks: ["F1", "F2", "F3"]
+      rows:
+        - mark: F1
+          length_ft: 4.0
+          width_ft: 4.0
+          depth_ft: 1.333
+          dim_tolerance: 0.1
+        - mark: F2
+          length_ft: 5.0
+          width_ft: 5.0
+          depth_ft: 1.333
+          dim_tolerance: 0.1
+        - mark: F3
+          length_ft: 6.0
+          width_ft: 6.0
+          depth_ft: 1.333
+          dim_tolerance: 0.15
+
+  - id: medstar-s202-empty
+    pdf: samples/medstar-leonardtown-foundation.pdf
+    page: 2
+    description: S202 detail sheet — no footing schedule (true negative)
+    expect:
+      footing_count: 0
+      require_notes: true
