@@ -68,11 +68,13 @@ Sample PDFs are in [`samples/`](samples/) (public structural drawings).
 
 ## Deploy
 
-See **[DEPLOY.md](DEPLOY.md)** for Railway + Vercel setup.
+**Live frontend:** https://frontend-sable-three-96.vercel.app
 
-Quick summary:
-- **Backend** → Railway (`backend/` root), set `ANTHROPIC_API_KEY`
-- **Frontend** → Vercel (`frontend/` root), set `NEXT_PUBLIC_API_URL` to Railway URL
+**GitHub:** https://github.com/AravindMohan10/concrete-takeoff-copilot
+
+Backend deploy (one step left): [Render one-click deploy](https://render.com/deploy?repo=https://github.com/AravindMohan10/concrete-takeoff-copilot) — set `ANTHROPIC_API_KEY`, then add the backend URL as `NEXT_PUBLIC_API_URL` in Vercel.
+
+Full steps: **[DEPLOY.md](DEPLOY.md)**
 
 ## Project structure
 

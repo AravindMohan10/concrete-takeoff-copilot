@@ -23,7 +23,7 @@ const SHIPPED = [
   { title: "Automatic CY calculation", detail: "L × W × D ÷ 27 on every row" },
   { title: "Editable review table", detail: "Override any value before export, add or remove rows" },
   { title: "CSV export", detail: "Bid-ready file with totals, includes your edits" },
-  { title: "Full-stack pipeline", detail: "FastAPI backend, Next.js frontend, deployed-ready" },
+  { title: "Full-stack pipeline", detail: "FastAPI backend on Render, Next.js frontend on Vercel" },
 ];
 
 const EXAMPLE_ROWS = [
@@ -129,7 +129,7 @@ export default function LandingPage() {
             Open full screen
           </Link>
           <a
-            href="https://github.com/AravindMohan10"
+            href="https://github.com/AravindMohan10/concrete-takeoff-copilot"
             className="rounded-lg px-6 py-3 text-sm font-medium text-zinc-500 hover:text-zinc-300 transition-colors"
           >
             GitHub →
@@ -310,7 +310,7 @@ export default function LandingPage() {
             {" · "}MS CS (AI/ML), University at Buffalo
           </span>
           <div className="flex gap-4">
-            <a href="https://github.com/AravindMohan10" className="hover:text-zinc-400 transition-colors">
+            <a href="https://github.com/AravindMohan10/concrete-takeoff-copilot" className="hover:text-zinc-400 transition-colors">
               GitHub
             </a>
             <Link href="/try" className="hover:text-zinc-400 transition-colors">
