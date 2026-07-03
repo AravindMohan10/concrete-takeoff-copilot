@@ -1,21 +1,26 @@
 # Deploy guide
 
-Deploy **backend → Railway**, **frontend → Vercel**.
+Deploy **backend → Render or Railway**, **frontend → Vercel**.
 
-## 1. Push to GitHub
+Repo: https://github.com/AravindMohan10/concrete-takeoff-copilot
 
-```bash
-cd /path/to/rudus
-git init
-git add .
-git commit -m "Initial commit: Concrete Takeoff Copilot demo"
-gh repo create rudus-takeoff --private --source=. --push
-```
+## 1. Backend (pick one)
 
-## 2. Backend (Railway)
+### Option A: Render (one-click)
+
+1. Open [Render deploy](https://render.com/deploy?repo=https://github.com/AravindMohan10/concrete-takeoff-copilot)
+2. Connect GitHub if prompted
+3. Set **`ANTHROPIC_API_KEY`** when asked
+4. Click **Apply** / deploy
+5. Copy your service URL (e.g. `https://takeoff-api.onrender.com`)
+6. Test: `curl https://YOUR-URL/health` → `{"status":"ok"}`
+
+> Free tier sleeps after ~15 min idle. First request may take 30–60s to wake.
+
+### Option B: Railway
 
 1. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo**
-2. Select your repo
+2. Select `concrete-takeoff-copilot`
 3. **Settings → Root Directory** → `backend`
 4. **Variables** → add:
 
@@ -30,25 +35,24 @@ gh repo create rudus-takeoff --private --source=. --push
 | `PDF_DPI_STRONG` | `250` |
 
 5. **Settings → Networking → Generate Domain**
-6. Copy the public URL (e.g. `https://rudus-demo-production.up.railway.app`)
-7. Test: `curl https://YOUR-RAILWAY-URL/health` → `{"status":"ok"}`
+6. Copy the public URL and test `/health`
 
-## 3. Frontend (Vercel)
+## 2. Frontend (Vercel)
 
-1. Go to [vercel.com](https://vercel.com) → **Add New → Project** → import GitHub repo
+1. Go to [vercel.com/new](https://vercel.com/new) → import `concrete-takeoff-copilot`
 2. **Root Directory** → `frontend`
 3. **Environment Variables**:
 
 | Variable | Value |
 |----------|-------|
-| `NEXT_PUBLIC_API_URL` | your Railway URL (no trailing slash) |
+| `NEXT_PUBLIC_API_URL` | your backend URL (no trailing slash) |
 
 4. Deploy
-5. Copy your Vercel URL (e.g. `https://rudus-takeoff.vercel.app`)
+5. Copy your Vercel URL (e.g. `https://concrete-takeoff-copilot.vercel.app`)
 
-## 4. Wire CORS (optional but recommended)
+## 3. Wire CORS (optional)
 
-Back in Railway, add:
+Back on Render/Railway, add:
 
 ```
 CORS_ORIGINS=https://your-app.vercel.app
@@ -56,34 +60,26 @@ CORS_ORIGINS=https://your-app.vercel.app
 
 Redeploy backend. Vercel preview URLs (`*.vercel.app`) are already allowed by regex.
 
-## 5. Smoke test
+## 4. Smoke test
 
 1. Open your Vercel URL
 2. Upload `samples/portland-foundation-s500.pdf`
 3. Extract page 1 → should return 5 footings
 4. Export CSV
 
-## CLI alternative
+## CLI alternative (Vercel)
 
 ```bash
-# Backend
-cd backend
-railway login
-railway init
-railway variables set ANTHROPIC_API_KEY=sk-ant-...
-railway up
-
-# Frontend
 cd frontend
-vercel login
+vercel link
+vercel env add NEXT_PUBLIC_API_URL production   # paste backend URL
 vercel --prod
-# Set NEXT_PUBLIC_API_URL in Vercel dashboard when prompted
 ```
 
 ## Cost notes
 
-- Railway: free tier includes ~$5/month credit
-- Vercel: free for hobby projects
-- Anthropic: ~$0.002–0.006 per extract (Haiku / Sonnet fallback)
+- Render free / Railway ~$5 credit: enough for demo
+- Vercel: free for hobby
+- Anthropic: ~$0.002–0.006 per extract
 
-Keep `ANTHROPIC_API_KEY` server-side only — never expose it in the frontend.
+Keep `ANTHROPIC_API_KEY` server-side only — never in the frontend.
