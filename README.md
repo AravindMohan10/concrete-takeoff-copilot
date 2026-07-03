@@ -10,8 +10,8 @@ Built as a portfolio piece for concrete estimation workflows.
 
 | | URL |
 |---|---|
-| **App** | https://frontend-sable-three-96.vercel.app |
-| **Full workspace** | https://frontend-sable-three-96.vercel.app/try |
+| **App** | https://concrete-takeoff-copilot.vercel.app |
+| **Full workspace** | https://concrete-takeoff-copilot.vercel.app/try |
 | **API** | https://takeoff-api-51xd.onrender.com |
 | **GitHub** | https://github.com/AravindMohan10/concrete-takeoff-copilot |
 

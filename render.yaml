@@ -25,7 +25,7 @@ services:
       - key: PDF_DPI_STRONG
         value: "250"
       - key: CORS_ORIGINS
-        value: https://frontend-sable-three-96.vercel.app
+        value: https://concrete-takeoff-copilot.vercel.app
       - key: EXTRACT_PER_IP_HOUR
         value: "5"
       - key: EXTRACT_PER_IP_DAY
