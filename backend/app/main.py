@@ -30,6 +30,11 @@ app.add_middleware(
 )
 
 
+@app.get("/")
+def root():
+    return {"status": "ok", "app": "Concrete Takeoff Copilot", "version": "0.1.0"}
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}

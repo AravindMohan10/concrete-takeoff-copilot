@@ -1,11 +1,11 @@
 services:
   - type: web
-    name: takeoff-api
+    name: concrete-takeoff-copilot-api
     runtime: python
     rootDir: backend
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
@@ -24,3 +24,5 @@ services:
         value: "200"
       - key: PDF_DPI_STRONG
         value: "250"
+      - key: CORS_ORIGINS
+        value: https://frontend-sable-three-96.vercel.app
