@@ -5,7 +5,7 @@ import Link from "next/link";
 import { FootingTable } from "@/components/FootingTable";
 import { PdfViewer } from "@/components/PdfViewer";
 import { UploadZone } from "@/components/UploadZone";
-import { extractFootingSchedule, getPdfInfo, renderPage } from "@/lib/api";
+import { extractFootingSchedule, getPdfInfo, isApiAvailable, renderPage } from "@/lib/api";
 import type { FootingRow, FootingSchedule } from "@/lib/types";
 import { calcVolumeCy, downloadTextFile, scheduleToCsv } from "@/lib/utils";
 
@@ -262,7 +262,23 @@ export function TakeoffDemo({ compact }: TakeoffDemoProps) {
           </div>
         )}
 
-        {!file ? (
+        {!isApiAvailable ? (
+          <div className={compact ? "mx-auto max-w-lg" : "mx-auto max-w-lg pt-12"}>
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center">
+              <p className="text-sm font-medium text-zinc-200">Run locally to try extraction</p>
+              <p className="mt-3 text-sm leading-relaxed text-zinc-500">
+                Start the FastAPI backend on port 8000, then run this frontend at{" "}
+                <code className="text-zinc-400">localhost:3002</code>. See the repo README for setup.
+              </p>
+              <a
+                href="https://github.com/AravindMohan10/concrete-takeoff-copilot"
+                className="mt-6 inline-block rounded-lg bg-orange-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-orange-500"
+              >
+                View setup on GitHub
+              </a>
+            </div>
+          </div>
+        ) : !file ? (
           <div className={compact ? "mx-auto max-w-lg" : "mx-auto max-w-lg pt-12"}>
             <UploadZone onFileSelect={handleFileSelect} />
           </div>

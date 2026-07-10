@@ -1,6 +1,19 @@
 import type { FootingSchedule, PdfInfo, RenderedPage } from "./types";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ??
+  (process.env.NODE_ENV === "development" ? "http://localhost:8000" : "");
+
+export const isApiAvailable = Boolean(API_BASE);
+
+function requireApi(): string {
+  if (!API_BASE) {
+    throw new Error(
+      "Backend not configured. Start the FastAPI server locally and set NEXT_PUBLIC_API_URL in frontend/.env.local."
+    );
+  }
+  return API_BASE;
+}
 
 function apiHeaders(): HeadersInit {
   const headers: Record<string, string> = {};
@@ -10,7 +23,7 @@ function apiHeaders(): HeadersInit {
 }
 
 async function postForm<T>(path: string, formData: FormData): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(`${requireApi()}${path}`, {
     method: "POST",
     headers: apiHeaders(),
     body: formData,
@@ -49,7 +62,7 @@ export async function downloadCsv(file: File, page: number): Promise<void> {
   form.append("file", file);
   form.append("page", String(page));
 
-  const res = await fetch(`${API_BASE}/api/export/csv`, {
+  const res = await fetch(`${requireApi()}/api/export/csv`, {
     method: "POST",
     headers: apiHeaders(),
     body: form,

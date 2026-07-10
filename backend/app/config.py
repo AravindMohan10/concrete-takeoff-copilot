@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     pdf_dpi_fast: int = 200
     pdf_dpi_strong: int = 250
 
-    # Comma-separated allowed origins for production (e.g. https://your-app.vercel.app)
+    # Comma-separated extra CORS origins (localhost allowed by default in main.py)
     cors_origins: str = ""
 
     # --- Guardrails (protect Anthropic spend on public demo) ---

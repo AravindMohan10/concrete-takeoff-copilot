@@ -23,7 +23,7 @@ const SHIPPED = [
   { title: "Automatic CY calculation", detail: "L × W × D ÷ 27 on every row" },
   { title: "Editable review table", detail: "Override any value before export, add or remove rows" },
   { title: "CSV export", detail: "Bid-ready file with totals, includes your edits" },
-  { title: "Full-stack pipeline", detail: "FastAPI backend on Render, Next.js frontend on Vercel" },
+  { title: "Full-stack pipeline", detail: "FastAPI backend + Next.js frontend, runs locally" },
 ];
 
 const EXAMPLE_ROWS = [
@@ -93,9 +93,9 @@ export default function LandingPage() {
             </a>
             <a
               href="#try"
-              className="rounded-lg bg-orange-600 px-4 py-2 font-medium text-white hover:bg-orange-500 transition-colors"
+              className="rounded-lg border border-zinc-700 px-4 py-2 font-medium text-zinc-300 hover:border-zinc-500 hover:bg-zinc-900 transition-colors"
             >
-              Try it
+              Local setup
             </a>
           </div>
         </div>
@@ -113,26 +113,26 @@ export default function LandingPage() {
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-zinc-400">
           I built a working takeoff tool for structural concrete: upload a foundation PDF, extract
           footing rows, edit what the sheet got wrong, and export CSV. One vertical slice, end to
-          end.
+          end. Run it locally to try extraction.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a
-            href="#try"
+            href="https://github.com/AravindMohan10/concrete-takeoff-copilot"
             className="rounded-lg bg-orange-600 px-6 py-3 text-sm font-medium text-white hover:bg-orange-500 transition-colors"
           >
-            Try the live demo
+            Clone & run locally
           </a>
           <Link
             href="/try"
             className="rounded-lg border border-zinc-700 px-6 py-3 text-sm font-medium text-zinc-300 hover:border-zinc-500 hover:bg-zinc-900 transition-colors"
           >
-            Open full screen
+            Open workspace
           </Link>
           <a
-            href="https://github.com/AravindMohan10/concrete-takeoff-copilot"
+            href="#built"
             className="rounded-lg px-6 py-3 text-sm font-medium text-zinc-500 hover:text-zinc-300 transition-colors"
           >
-            GitHub →
+            What&apos;s built →
           </a>
         </div>
         <div className="mt-6 flex flex-wrap gap-2">
@@ -285,13 +285,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Live demo */}
+      {/* Demo workspace */}
       <section id="try" className="border-t border-zinc-800 py-14">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-6 text-center">
-            <h2 className="text-2xl font-semibold tracking-tight">Live demo</h2>
+            <h2 className="text-2xl font-semibold tracking-tight">Try it locally</h2>
             <p className="mt-2 text-sm text-zinc-500">
-              Upload a structural PDF with a footing schedule. Extract, edit a row, export CSV.
+              Start the backend, then upload a structural PDF with a footing schedule. Extract, edit, export CSV.
             </p>
           </div>
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/30 p-4 sm:p-6">

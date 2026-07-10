@@ -4,27 +4,22 @@ A demo takeoff tool for structural/concrete drawings:
 
 **PDF upload → footing schedule extraction → CY quantities → CSV export**
 
-Built as a portfolio piece for concrete estimation workflows.
+Built as a portfolio piece for concrete estimation workflows. **Local only** — nothing is hosted in production.
 
-## Live demo
+## Links
 
 | | URL |
 |---|---|
-| **App** | https://concrete-takeoff-copilot.vercel.app |
-| **Full workspace** | https://concrete-takeoff-copilot.vercel.app/try |
-| **API** | https://takeoff-api-51xd.onrender.com |
 | **GitHub** | https://github.com/AravindMohan10/concrete-takeoff-copilot |
 
-Upload a foundation PDF, find the footing schedule sheet, extract rows, edit anything wrong, export CSV.
-
-> The API runs on Render's free tier and sleeps after ~15 min of inactivity. The first request after idle can take 30–60 seconds.
+Clone the repo and run backend + frontend locally (see below).
 
 ## Architecture
 
 ```
 ┌─────────────┐     multipart/form-data      ┌──────────────┐
 │  Next.js    │  ─────────────────────────►  │   FastAPI    │
-│  (Vercel)   │                              │  (Render)    │
+│  (local)    │                              │   (local)    │
 │             │  ◄── JSON / CSV ───────────  │              │
 └─────────────┘                              └──────┬───────┘
                                                     │
@@ -48,8 +43,8 @@ Sample PDFs are in [`samples/`](samples/) (public structural drawings).
 
 ## Stack
 
-- **Frontend:** Next.js, TypeScript, Tailwind (Vercel)
-- **Backend:** FastAPI, PyMuPDF, Anthropic Claude (Haiku → Sonnet fallback, prompt caching) (Render)
+- **Frontend:** Next.js, TypeScript, Tailwind
+- **Backend:** FastAPI, PyMuPDF, Anthropic Claude (Haiku → Sonnet fallback, prompt caching)
 - **Domain:** Footing schedule → cubic yard takeoff
 
 ## Run locally
@@ -92,22 +87,17 @@ cd backend && python -m eval.run_eval --offline
 cd frontend && npm install && npm test && npm run build
 ```
 
-## Deploy
+## Teardown
 
-Both services are live. To redeploy or fork:
-
-- **Frontend** → Vercel, root directory `frontend`, env `NEXT_PUBLIC_API_URL`
-- **Backend** → Render, root directory `backend`, env `ANTHROPIC_API_KEY`
-
-Full steps: **[DEPLOY.md](DEPLOY.md)** (includes API guardrails and cost limits)
+Hosted Render API and Vercel frontend are retired. Steps to delete any remaining cloud projects: **[DEPLOY.md](DEPLOY.md)**
 
 ## Guardrails
 
-Public demo protections on the API:
+Rate limits still apply when running the API locally or if you re-host it:
 
 - **Rate limits** — 5 extractions/hour and 15/day per IP; 50/day global cap
 - **Upload limits** — 25 MB max PDF, 50 pages max
-- **Optional demo token** — `DEMO_ACCESS_TOKEN` / `NEXT_PUBLIC_DEMO_ACCESS_TOKEN` blocks direct API scripts
+- **Optional demo token** — `DEMO_ACCESS_TOKEN` / `NEXT_PUBLIC_DEMO_ACCESS_TOKEN`
 
 See `backend/.env.example` for all tunables. Usage snapshot: `GET /api/usage`.
 

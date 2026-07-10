@@ -19,7 +19,7 @@ from app.models import FootingSchedule
 from app.pdf_utils import get_page_count, pdf_page_to_base64_png
 
 app = FastAPI(
-    title="Rudus Demo — Concrete Takeoff Copilot",
+    title="Concrete Takeoff Copilot",
     description="Upload structural PDFs → extract footing schedules → export CY quantities",
     version="0.1.0",
 )
@@ -29,10 +29,7 @@ _cors_origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins,
-    allow_origin_regex=(
-        r"http://(localhost|127\.0\.0\.1):\d+|"
-        r"https://([a-z0-9-]+\.)*vercel\.app"
-    ),
+    allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
